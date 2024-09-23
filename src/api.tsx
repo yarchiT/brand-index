@@ -24,15 +24,27 @@ export interface BrandStatsApiResponse {
 }
 
 export function mapApiResponseToProps(brandName: string, apiResponse: BrandStatsApiResponse): BrandStatsProps {
+    const extrapolateAndRound = (value: number): number => {
+        const extrapolated = value * 100;
+        if (extrapolated > 1000) {
+            return Math.round(extrapolated / 100) * 100;
+        }
+        return extrapolated;
+    };
+
     return {
         name: brandName,
-        stats:{
-            totalCount: apiResponse.totalCount,
+        stats: {
+            totalCount: extrapolateAndRound(apiResponse.totalCount),
             dates: apiResponse.aggregations.dates.values.map(item => ({
                 date: item.date,
-                count: item.count
+                count: extrapolateAndRound(item.count)
             })),
-            resourceTypes: apiResponse.aggregations.resourceTypes?.values ?? []
+            resourceTypes: (apiResponse.aggregations.resourceTypes?.values ?? []).map(item => ({
+                ...item,
+                count: extrapolateAndRound(item.count),
+                metricValue: extrapolateAndRound(item.metricValue)
+            }))
         }
     };
 }
