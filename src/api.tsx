@@ -42,8 +42,7 @@ export function mapApiResponseToProps(brandName: string, apiResponse: BrandStats
             })),
             resourceTypes: (apiResponse.aggregations.resourceTypes?.values ?? []).map(item => ({
                 ...item,
-                count: extrapolateAndRound(item.count),
-                metricValue: extrapolateAndRound(item.metricValue)
+                count: extrapolateAndRound(item.count)
             }))
         }
     };

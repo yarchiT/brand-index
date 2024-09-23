@@ -1,13 +1,14 @@
 import React from 'react';
 import BrandDateChart from "./BrandDateChart.tsx";
 import {NumberUtils} from "./numberUtils.ts";
+import ResourceTypeChart from "./BrandStats/ResourceTypeChart.tsx";
 
 export interface BrandStatsProps {
     name: string;
     stats: {
         totalCount: number;
         dates: { date: string; count: number }[];
-        resourceTypes: { key: string; count: number; metricValue: number }[];
+        resourceTypes: { key: string; count: number; }[];
     };
 }
 
@@ -21,14 +22,9 @@ const BrandStats: React.FC<BrandStatsProps> = ({ name, stats }) => {
                 <BrandDateChart data={stats.dates} />
             </div>
 
-            <h3 className="text-xl font-semibold mb-4">Resource Types</h3>
-            <ul>
-                {stats.resourceTypes.map((type) => (
-                    <li key={type.key} className="mb-2">
-                        {type.key}: <span className="font-bold">{type.count}</span> (Metric Value: {type.metricValue})
-                    </li>
-                ))}
-            </ul>
+            <div className="mb-8">
+                <ResourceTypeChart data={stats.resourceTypes} />
+            </div>
         </div>
     );
 };
