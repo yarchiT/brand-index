@@ -1,8 +1,9 @@
 import React, {useState} from 'react';
-import {ArrowRight} from 'lucide-react';
+import {ArrowRight, Download} from 'lucide-react';
 import axios from 'axios';
 import BrandStats, {BrandStatsProps} from "./BrandStats/BrandStats.tsx";
 import {BrandStatsApiResponse, mapApiResponseToProps} from "./api.tsx";
+import {usePDF} from "react-to-pdf";
 
 interface BrandCompareStats {
     brand1: BrandStatsApiResponse;
@@ -15,6 +16,8 @@ const BrandsCompare: React.FC = () => {
     const [brand1Response, setBrand1Response] = useState<BrandStatsProps | null>(null);
     const [brand2Response, setBrand2Response] = useState<BrandStatsProps | null>(null);
 
+    const { toPDF, targetRef } = usePDF({ filename: 'brands_comparison.pdf' });
+    
     const fetchBrandStats = async (brand1: string, brand2: string): Promise<BrandCompareStats> => {
         const payload = {
             brand1: brand1,
@@ -73,19 +76,34 @@ const BrandsCompare: React.FC = () => {
                 </div>
             </form>
 
-
             {brand1Response && brand2Response && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div className="bg-white rounded-lg shadow-lg">
-                        <BrandStats name={brand1Response.name} stats={brand1Response.stats} />
-                    </div>
-                    <div className="bg-white rounded-lg shadow-lg">
-                        <BrandStats name={brand2Response.name} stats={brand2Response.stats} />
-                    </div>
+                <div className="flex justify-end mb-4">
+                    <button
+                        onClick={() => toPDF()}
+                        className="p-1.5 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition duration-300 group relative"
+                        aria-label="Download Comparison PDF"
+                    >
+                        <Download size={16} />
+                        <span className="absolute bottom-full right-0 bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
+                            Download Comparison PDF
+                        </span>
+                    </button>
                 </div>
             )}
+
+            <div ref={targetRef}>
+                {brand1Response && brand2Response && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div className="bg-white rounded-lg shadow-lg">
+                            <BrandStats name={brand1Response.name} stats={brand1Response.stats} />
+                        </div>
+                        <div className="bg-white rounded-lg shadow-lg">
+                            <BrandStats name={brand2Response.name} stats={brand2Response.stats} />
+                        </div>
+                    </div>
+                )}
+            </div>
         </div>
-    );
-};
+    );};
 
 export default BrandsCompare;
