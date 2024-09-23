@@ -54,14 +54,14 @@ const BrandsCompare: React.FC = () => {
                         type="text"
                         value={brand1}
                         onChange={(e) => setBrand1(e.target.value)}
-                        placeholder="Enter first brand name"
+                        placeholder="Enter first brand"
                         className="px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                     <input
                         type="text"
                         value={brand2}
                         onChange={(e) => setBrand2(e.target.value)}
-                        placeholder="Enter second brand name"
+                        placeholder="Enter second brand"
                         className="px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                     <button

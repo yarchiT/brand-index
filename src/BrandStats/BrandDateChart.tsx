@@ -44,7 +44,7 @@ const BrandDateChart: React.FC<BrandDateChartProps> = ({ data }) => {
                         formatter={(value) => NumberUtils.formatNumber(Number(value))}
                     />
                     <Legend />
-                    <Line type="monotone" dataKey="count" stroke="#8884d8" activeDot={{ r: 8 }} />
+                    <Line type="monotone" dataKey="count" name="Mentions" stroke="#8884d8" activeDot={{ r: 8 }} />
                 </LineChart>
             </ResponsiveContainer>
         </div>
