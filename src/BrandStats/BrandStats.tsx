@@ -1,7 +1,7 @@
 import React from 'react';
 import BrandDateChart from "./BrandDateChart.tsx";
-import {NumberUtils} from "./numberUtils.ts";
-import ResourceTypeChart from "./BrandStats/ResourceTypeChart.tsx";
+import {NumberUtils} from "../numberUtils.ts";
+import ResourceTypeChart from "./ResourceTypeChart.tsx";
 
 export interface BrandStatsProps {
     name: string;

@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {ArrowRight} from 'lucide-react';
 import axios from 'axios';
-import BrandStats, {BrandStatsProps} from "./BrandStats.tsx";
+import BrandStats, {BrandStatsProps} from "./BrandStats/BrandStats.tsx";
 import {BrandStatsApiResponse, mapApiResponseToProps} from "./api.tsx";
 
 interface BrandCompareStats {

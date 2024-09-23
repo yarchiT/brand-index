@@ -1,6 +1,6 @@
 import React from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { NumberUtils } from './numberUtils';
+import { NumberUtils } from '../numberUtils';
 import { format, parseISO } from 'date-fns';
 
 interface BrandDateChartProps {
