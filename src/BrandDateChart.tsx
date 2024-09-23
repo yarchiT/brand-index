@@ -1,5 +1,6 @@
 import React from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import {NumberUtils} from "./numberUtils.ts";
 
 interface BrandDateChartProps {
     data: {
@@ -23,8 +24,8 @@ const BrandDateChart: React.FC<BrandDateChartProps> = ({ data }) => {
                 >
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="date" />
-                    <YAxis />
-                    <Tooltip />
+                    <YAxis tickFormatter={(value) => NumberUtils.formatNumber(value)} />
+                    <Tooltip formatter={(value : number) => NumberUtils.formatNumber(Number(value))} />
                     <Legend />
                     <Line type="monotone" dataKey="count" stroke="#8884d8" activeDot={{ r: 8 }} />
                 </LineChart>
