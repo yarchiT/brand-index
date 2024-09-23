@@ -37,7 +37,7 @@ export function mapApiResponseToProps(brandName: string, apiResponse: BrandStats
         stats: {
             totalCount: extrapolateAndRound(apiResponse.totalCount),
             dates: apiResponse.aggregations.dates.values.map(item => ({
-                date: item.date,
+                date: item.dateAsUtc,
                 count: extrapolateAndRound(item.count)
             })),
             resourceTypes: (apiResponse.aggregations.resourceTypes?.values ?? []).map(item => ({
