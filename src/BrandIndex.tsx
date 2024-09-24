@@ -1,6 +1,6 @@
-import React, { useState, KeyboardEvent, useCallback } from 'react';
+import React, { useState, KeyboardEvent, useEffect } from 'react';
 import axios from 'axios';
-import { Plus, Download } from 'lucide-react';
+import { Plus, Download, Share2 } from 'lucide-react';
 import { usePDF } from 'react-to-pdf';
 import BrandStats, { BrandStatsProps } from "./BrandStats/BrandStats.tsx";
 import { BrandStatsApiResponse, mapApiResponseToProps } from "./api.tsx";
@@ -11,9 +11,30 @@ const BrandIndex: React.FC = () => {
     const [mainBrandResponse, setMainBrandResponse] = useState<BrandStatsProps | null>(null);
     const [competitorBrandResponse, setCompetitorBrandResponse] = useState<BrandStatsProps | null>(null);
     const [showCompetitorInput, setShowCompetitorInput] = useState(false);
-    const [lastChangedInput, setLastChangedInput] = useState<'main' | 'competitor' | null>(null);
+    const [isSharing, setIsSharing] = useState(false);
 
     const { toPDF, targetRef } = usePDF({ filename: 'BrandIndex.pdf' });
+
+    useEffect(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const mainBrandParam = urlParams.get('mainBrand');
+        const competitorBrandParam = urlParams.get('competitorBrand');
+
+        if (mainBrandParam) {
+            setMainBrand(mainBrandParam);
+            fetchBrandStats(mainBrandParam).then(response => {
+                setMainBrandResponse(mapApiResponseToProps(mainBrandParam, response));
+            });
+        }
+
+        if (competitorBrandParam) {
+            setCompetitorBrand(competitorBrandParam);
+            setShowCompetitorInput(true);
+            fetchBrandStats(competitorBrandParam).then(response => {
+                setCompetitorBrandResponse(mapApiResponseToProps(competitorBrandParam, response));
+            });
+        }
+    }, []);
 
     const fetchBrandStats = async (brandName: string): Promise<BrandStatsApiResponse> => {
         const response = await axios.post<{ brandStats: BrandStatsApiResponse }>(
@@ -28,59 +49,59 @@ const BrandIndex: React.FC = () => {
         return response.data.brandStats;
     };
 
-    const handleFetchBrandStats = useCallback(async (brandName: string, isMain: boolean) => {
-        try {
-            const response = await fetchBrandStats(brandName);
-            const mappedResponse = mapApiResponseToProps(brandName, response);
-            if (isMain) {
-                setMainBrandResponse(mappedResponse);
-            } else {
-                setCompetitorBrandResponse(mappedResponse);
-            }
-        } catch (error) {
-            console.error(`Error fetching ${isMain ? 'main' : 'competitor'} brand stats:`, error);
-        }
-    }, []);
-
-    const handleKeyPress = async (e: KeyboardEvent<HTMLInputElement>) => {
+    const handleKeyPress = async (e: KeyboardEvent<HTMLInputElement>, isMainBrand: boolean) => {
         if (e.key === 'Enter') {
-            if (lastChangedInput === 'main' && mainBrand) {
-                await handleFetchBrandStats(mainBrand, true);
-            } else if (lastChangedInput === 'competitor' && competitorBrand) {
-                await handleFetchBrandStats(competitorBrand, false);
+            if (isMainBrand) {
+                if (mainBrand) {
+                    try {
+                        const mainResponse = await fetchBrandStats(mainBrand);
+                        setMainBrandResponse(mapApiResponseToProps(mainBrand, mainResponse));
+                    } catch (error) {
+                        console.error('Error fetching main brand stats:', error);
+                    }
+                }
+            } else if (showCompetitorInput && competitorBrand) {
+                try {
+                    const competitorResponse = await fetchBrandStats(competitorBrand);
+                    setCompetitorBrandResponse(mapApiResponseToProps(competitorBrand, competitorResponse));
+                } catch (error) {
+                    console.error('Error fetching competitor brand stats:', error);
+                }
             }
         }
-    };
-
-    const handleMainBrandChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setMainBrand(e.target.value);
-        setLastChangedInput('main');
-    };
-
-    const handleCompetitorBrandChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setCompetitorBrand(e.target.value);
-        setLastChangedInput('competitor');
     };
 
     const addCompetitorInput = () => {
         setShowCompetitorInput(true);
     };
 
-    const isEmptyScreen = !mainBrandResponse && !competitorBrandResponse;
+    const handleShare = () => {
+        const url = new URL(window.location.href);
+        url.searchParams.set('mainBrand', mainBrand);
+        if (competitorBrand) {
+            url.searchParams.set('competitorBrand', competitorBrand);
+        }
+        navigator.clipboard.writeText(url.toString()).then(() => {
+            setIsSharing(true);
+            setTimeout(() => setIsSharing(false), 2000);
+        }).catch(err => {
+            console.error('Failed to copy: ', err);
+        });
+    };
 
     return (
         <div className="w-full max-w-full px-4 py-8 sm:py-16">
             <div className="w-full max-w-7xl mx-auto">
                 <div className="flex flex-col items-center justify-center mb-4 space-y-4">
                     <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4">
-                        <div className="flex items-center space-x-2 w-full sm:w-auto">
+                        <div className="flex items-center space-x-2">
                             <input
                                 type="text"
                                 value={mainBrand}
-                                onChange={handleMainBrandChange}
-                                onKeyPress={handleKeyPress}
+                                onChange={(e) => setMainBrand(e.target.value)}
+                                onKeyPress={(e) => handleKeyPress(e, true)}
                                 placeholder="Enter brand name"
-                                className={`w-full ${isEmptyScreen ? 'text-xl py-3 px-6' : 'text-base py-2 px-4'} max-w-md border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300`}
+                                className="w-full sm:w-auto max-w-md px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                             />
                             {mainBrandResponse && !showCompetitorInput && (
                                 <button
@@ -96,21 +117,30 @@ const BrandIndex: React.FC = () => {
                             <input
                                 type="text"
                                 value={competitorBrand}
-                                onChange={handleCompetitorBrandChange}
-                                onKeyPress={handleKeyPress}
+                                onChange={(e) => setCompetitorBrand(e.target.value)}
+                                onKeyPress={(e) => handleKeyPress(e, false)}
                                 placeholder="Enter competitor brand name"
                                 className="w-full sm:w-auto max-w-md px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                             />
                         )}
                     </div>
                     {mainBrandResponse && (
-                        <button
-                            onClick={() => toPDF()}
-                            className="p-1 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition duration-300"
-                            title="Download PDF"
-                        >
-                            <Download size={16} />
-                        </button>
+                        <div className="flex space-x-2">
+                            <button
+                                onClick={() => toPDF()}
+                                className="p-1 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition duration-300"
+                                title="Download PDF"
+                            >
+                                <Download size={16} />
+                            </button>
+                            <button
+                                onClick={handleShare}
+                                className={`p-1 ${isSharing ? 'bg-green-600' : 'bg-green-500'} text-white rounded-full hover:bg-green-600 transition duration-300`}
+                                title="Share"
+                            >
+                                <Share2 size={16} />
+                            </button>
+                        </div>
                     )}
                 </div>
                 <div ref={targetRef} className={`grid ${showCompetitorInput ? 'grid-cols-2' : 'grid-cols-1'} gap-16`}>
