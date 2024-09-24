@@ -12,6 +12,7 @@ const BrandIndex: React.FC = () => {
     const [competitorBrandResponse, setCompetitorBrandResponse] = useState<BrandStatsProps | null>(null);
     const [showCompetitorInput, setShowCompetitorInput] = useState(false);
     const [isSharing, setIsSharing] = useState(false);
+    const [showCopiedText, setShowCopiedText] = useState(false);
 
     const { toPDF, targetRef } = usePDF({ filename: 'BrandIndex.pdf' });
 
@@ -83,7 +84,11 @@ const BrandIndex: React.FC = () => {
         }
         navigator.clipboard.writeText(url.toString()).then(() => {
             setIsSharing(true);
-            setTimeout(() => setIsSharing(false), 2000);
+            setShowCopiedText(true);
+            setTimeout(() => {
+                setIsSharing(false);
+                setShowCopiedText(false);
+            }, 1000);
         }).catch(err => {
             console.error('Failed to copy: ', err);
         });
@@ -125,7 +130,7 @@ const BrandIndex: React.FC = () => {
                         )}
                     </div>
                     {mainBrandResponse && (
-                        <div className="flex space-x-2">
+                        <div className="flex items-center space-x-2">
                             <button
                                 onClick={() => toPDF()}
                                 className="p-1 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition duration-300"
@@ -133,13 +138,20 @@ const BrandIndex: React.FC = () => {
                             >
                                 <Download size={16} />
                             </button>
-                            <button
-                                onClick={handleShare}
-                                className={`p-1 ${isSharing ? 'bg-green-600' : 'bg-green-500'} text-white rounded-full hover:bg-green-600 transition duration-300`}
-                                title="Share"
-                            >
-                                <Share2 size={16} />
-                            </button>
+                            <div className="relative">
+                                <button
+                                    onClick={handleShare}
+                                    className={`p-1 ${isSharing ? 'bg-green-600' : 'bg-green-500'} text-white rounded-full hover:bg-green-600 transition duration-300`}
+                                    title="Share"
+                                >
+                                    <Share2 size={16} />
+                                </button>
+                                {showCopiedText && (
+                                    <span className="absolute left-full ml-2 whitespace-nowrap text-sm text-green-600 font-medium">
+                                        Copied to clipboard
+                                    </span>
+                                )}
+                            </div>
                         </div>
                     )}
                 </div>
