@@ -38,6 +38,12 @@ export interface BrandStatsApiResponse {
                 key: string;
                 count: number;
             }[];
+        };
+        authorGender: {
+            values: {
+                key: string;
+                count: number;
+            }[];
         }
     };
 }
@@ -75,6 +81,10 @@ export function mapApiResponseToProps(brandName: string, apiResponse: BrandStats
                 count: extrapolateAndRound(item.count)
             })),
             languages: (apiResponse.aggregations.languages?.values ?? []).map(item => ({
+                ...item,
+                count: extrapolateAndRound(item.count)
+            })),
+            authorGender: (apiResponse.aggregations.authorGender?.values ?? []).map(item => ({
                 ...item,
                 count: extrapolateAndRound(item.count)
             }))

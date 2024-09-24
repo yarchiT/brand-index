@@ -5,6 +5,7 @@ import ResourceTypeChart from "./ResourceTypeChart.tsx";
 import SentimentChart from "./SentimentChart.tsx";
 import CountryDistributionChart from "./CountryDistributionChart.tsx";
 import LanguageDistributionChart from "./LanguageDistributionChart.tsx";
+import AuthorGenderStats from "./AuthorGenderStats.tsx";
 
 export interface BrandStatsProps {
     name: string;
@@ -18,6 +19,7 @@ export interface BrandStatsProps {
         };
         countries: { key: string; count: number; }[];
         languages: { key: string; count: number; }[];
+        authorGender: { key: string; count: number; }[];
     };
 }
 
@@ -29,6 +31,10 @@ const BrandStats: React.FC<BrandStatsProps> = ({ name, stats }) => {
 
             <div className="mb-8">
                 <BrandDateChart data={stats.dates} />
+            </div>
+
+            <div className="mb-8">
+                <AuthorGenderStats data={stats.authorGender} />
             </div>
 
             <div className="mb-8">
