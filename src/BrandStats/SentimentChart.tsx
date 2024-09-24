@@ -1,5 +1,5 @@
 import React from 'react';
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Label } from 'recharts';
+import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Label, Tooltip } from 'recharts';
 import { NumberUtils } from "../numberUtils";
 
 interface SentimentChartProps {
@@ -45,6 +45,19 @@ const SentimentChart: React.FC<SentimentChartProps> = ({ nsr, sentiment }) => {
         </div>
     );
 
+    const CustomTooltip = ({ active, payload }: any) => {
+        if (active && payload && payload.length) {
+            return (
+                <div className="bg-white border border-gray-300 p-2 rounded shadow-md">
+                    <p className="font-semibold">NSR (Net Sentiment Rate)</p>
+                    <p>Sentiment in the topic on -100 to 100 scale, where 0 is neutral</p>
+                    <p className="font-bold">Current NSR: {nsr.toFixed(1)}</p>
+                </div>
+            );
+        }
+        return null;
+    };
+
     return (
         <div className="w-full lg:min-w-[300px] h-[230px]">
             <h3 className="text-xl font-semibold mb-1 text-center cursor-help">Sentiment (NSR)</h3>
@@ -73,6 +86,7 @@ const SentimentChart: React.FC<SentimentChartProps> = ({ nsr, sentiment }) => {
                             }}
                         />
                     </Pie>
+                    <Tooltip content={<CustomTooltip />} />
                     <Legend content={renderLegend} verticalAlign="bottom" height={36} />
                 </PieChart>
             </ResponsiveContainer>
