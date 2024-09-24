@@ -1,4 +1,4 @@
-import React, { useState, KeyboardEvent } from 'react';
+import React, { useState, KeyboardEvent, useCallback } from 'react';
 import axios from 'axios';
 import { Plus, Download } from 'lucide-react';
 import { usePDF } from 'react-to-pdf';
@@ -11,6 +11,7 @@ const BrandIndex: React.FC = () => {
     const [mainBrandResponse, setMainBrandResponse] = useState<BrandStatsProps | null>(null);
     const [competitorBrandResponse, setCompetitorBrandResponse] = useState<BrandStatsProps | null>(null);
     const [showCompetitorInput, setShowCompetitorInput] = useState(false);
+    const [lastChangedInput, setLastChangedInput] = useState<'main' | 'competitor' | null>(null);
 
     const { toPDF, targetRef } = usePDF({ filename: 'BrandIndex.pdf' });
 
@@ -27,26 +28,38 @@ const BrandIndex: React.FC = () => {
         return response.data.brandStats;
     };
 
+    const handleFetchBrandStats = useCallback(async (brandName: string, isMain: boolean) => {
+        try {
+            const response = await fetchBrandStats(brandName);
+            const mappedResponse = mapApiResponseToProps(brandName, response);
+            if (isMain) {
+                setMainBrandResponse(mappedResponse);
+            } else {
+                setCompetitorBrandResponse(mappedResponse);
+            }
+        } catch (error) {
+            console.error(`Error fetching ${isMain ? 'main' : 'competitor'} brand stats:`, error);
+        }
+    }, []);
+
     const handleKeyPress = async (e: KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
-            if (!mainBrandResponse) {
-                if (mainBrand) {
-                    try {
-                        const mainResponse = await fetchBrandStats(mainBrand);
-                        setMainBrandResponse(mapApiResponseToProps(mainBrand, mainResponse));
-                    } catch (error) {
-                        console.error('Error fetching main brand stats:', error);
-                    }
-                }
-            } else if (showCompetitorInput && competitorBrand) {
-                try {
-                    const competitorResponse = await fetchBrandStats(competitorBrand);
-                    setCompetitorBrandResponse(mapApiResponseToProps(competitorBrand, competitorResponse));
-                } catch (error) {
-                    console.error('Error fetching competitor brand stats:', error);
-                }
+            if (lastChangedInput === 'main' && mainBrand) {
+                await handleFetchBrandStats(mainBrand, true);
+            } else if (lastChangedInput === 'competitor' && competitorBrand) {
+                await handleFetchBrandStats(competitorBrand, false);
             }
         }
+    };
+
+    const handleMainBrandChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setMainBrand(e.target.value);
+        setLastChangedInput('main');
+    };
+
+    const handleCompetitorBrandChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setCompetitorBrand(e.target.value);
+        setLastChangedInput('competitor');
     };
 
     const addCompetitorInput = () => {
@@ -64,7 +77,7 @@ const BrandIndex: React.FC = () => {
                             <input
                                 type="text"
                                 value={mainBrand}
-                                onChange={(e) => setMainBrand(e.target.value)}
+                                onChange={handleMainBrandChange}
                                 onKeyPress={handleKeyPress}
                                 placeholder="Enter brand name"
                                 className={`w-full ${isEmptyScreen ? 'text-xl py-3 px-6' : 'text-base py-2 px-4'} max-w-md border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300`}
@@ -83,7 +96,7 @@ const BrandIndex: React.FC = () => {
                             <input
                                 type="text"
                                 value={competitorBrand}
-                                onChange={(e) => setCompetitorBrand(e.target.value)}
+                                onChange={handleCompetitorBrandChange}
                                 onKeyPress={handleKeyPress}
                                 placeholder="Enter competitor brand name"
                                 className="w-full sm:w-auto max-w-md px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
