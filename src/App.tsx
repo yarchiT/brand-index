@@ -1,12 +1,12 @@
 import Header from './Header'
 import './App.css'
-import BrandsCompare from "./BrandsCompare.tsx";
+import BrandIndex from "./BrandIndex.tsx";
 
 function App() {
     return (
         <>
             <Header />
-            <BrandsCompare />
+            <BrandIndex />
         </>
     )
 }

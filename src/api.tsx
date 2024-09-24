@@ -1,4 +1,4 @@
-import {BrandStatsProps} from "./BrandStats.tsx";
+import {BrandStatsProps} from "./BrandStats/BrandStats.tsx";
 
 export interface BrandStatsApiResponse {
     totalCount: number;
