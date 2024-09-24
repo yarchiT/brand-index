@@ -53,7 +53,6 @@ const CountryDistributionChart: React.FC<CountryDistributionChartProps> = ({ dat
                         dataKey="country"
                         type="category"
                         width={100}
-                        tick={{ fontSize: 12 }}
                         tickFormatter={(value) => value || ' '} // Replace empty strings with spaces
                     />
                     <Tooltip
