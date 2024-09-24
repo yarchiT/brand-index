@@ -1,6 +1,7 @@
 import React, { useState, KeyboardEvent } from 'react';
 import axios from 'axios';
-import { Plus } from 'lucide-react';
+import { Plus, Download } from 'lucide-react';
+import { usePDF } from 'react-to-pdf';
 import BrandStats, { BrandStatsProps } from "./BrandStats/BrandStats.tsx";
 import { BrandStatsApiResponse, mapApiResponseToProps } from "./api.tsx";
 
@@ -10,6 +11,8 @@ const BrandIndex: React.FC = () => {
     const [mainBrandResponse, setMainBrandResponse] = useState<BrandStatsProps | null>(null);
     const [competitorBrandResponse, setCompetitorBrandResponse] = useState<BrandStatsProps | null>(null);
     const [showCompetitorInput, setShowCompetitorInput] = useState(false);
+
+    const { toPDF, targetRef } = usePDF({ filename: 'BrandIndex.pdf' });
 
     const fetchBrandStats = async (brandName: string): Promise<BrandStatsApiResponse> => {
         const response = await axios.post<{ brandStats: BrandStatsApiResponse }>(
@@ -52,9 +55,9 @@ const BrandIndex: React.FC = () => {
 
     return (
         <div className="w-full max-w-full px-4 py-16">
-            <div className="w-full max-w-7xl mx-auto"> {/* Increased max-width */}
-                <div className="flex items-center mb-8">
-                    <div className="flex-grow flex justify-center space-x-16"> {/* Increased space between inputs */}
+            <div className="w-full max-w-7xl mx-auto">
+                <div className="flex items-center mb-4">
+                    <div className="flex-grow flex justify-center space-x-16">
                         <input
                             type="text"
                             value={mainBrand}
@@ -83,15 +86,26 @@ const BrandIndex: React.FC = () => {
                             <Plus size={20} />
                         </button>
                     )}
-                </div>
-                <div className={`grid ${showCompetitorInput ? 'grid-cols-2' : 'grid-cols-1'} gap-16`}>
                     {mainBrandResponse && (
-                        <div className="bg-white rounded-lg shadow-lg p-6"> {/* Added padding */}
+                        <div className="flex justify-center mb-4">
+                            <button
+                                onClick={() => toPDF()}
+                                className="p-1 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition duration-300"
+                                title="Download PDF"
+                            >
+                                <Download size={16} />
+                            </button>
+                        </div>
+                    )}
+                </div>
+                <div ref={targetRef} className={`grid ${showCompetitorInput ? 'grid-cols-2' : 'grid-cols-1'} gap-16`}>
+                    {mainBrandResponse && (
+                        <div className="bg-white rounded-lg shadow-lg p-6">
                             <BrandStats name={mainBrandResponse.name} stats={mainBrandResponse.stats} />
                         </div>
                     )}
                     {competitorBrandResponse && (
-                        <div className="bg-white rounded-lg shadow-lg p-6"> {/* Added padding */}
+                        <div className="bg-white rounded-lg shadow-lg p-6">
                             <BrandStats name={competitorBrandResponse.name} stats={competitorBrandResponse.stats} />
                         </div>
                     )}
