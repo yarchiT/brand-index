@@ -2,6 +2,7 @@ import React from 'react';
 import BrandDateChart from "./BrandDateChart.tsx";
 import {NumberUtils} from "../numberUtils.ts";
 import ResourceTypeChart from "./ResourceTypeChart.tsx";
+import SentimentChart from "./SentimentChart.tsx";
 
 export interface BrandStatsProps {
     name: string;
@@ -9,6 +10,10 @@ export interface BrandStatsProps {
         totalCount: number;
         dates: { date: string; count: number }[];
         resourceTypes: { key: string; count: number; }[];
+        sentiment: {
+            nsr: number;
+            values: { key: string; count: number; }[];
+        };
     };
 }
 
@@ -25,6 +30,18 @@ const BrandStats: React.FC<BrandStatsProps> = ({ name, stats }) => {
             <div className="mb-8">
                 <ResourceTypeChart data={stats.resourceTypes} />
             </div>
+
+            <div className="mb-8">
+                <SentimentChart
+                    nsr={stats.sentiment.nsr}
+                    sentiment={{
+                        negative: stats.sentiment.values.find(v => v.key === 'negative')?.count || 0,
+                        neutral: stats.sentiment.values.find(v => v.key === 'neutral')?.count || 0,
+                        positive: stats.sentiment.values.find(v => v.key === 'positive')?.count || 0,
+                    }}
+                />
+            </div>
+            
         </div>
     );
 };

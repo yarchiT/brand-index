@@ -20,6 +20,13 @@ export interface BrandStatsApiResponse {
             }[];
             otherCount: number;
         };
+        sentiment: {
+            nsr: number,
+            values: {
+                key: string;
+                count: number;
+            }[];
+        };
     };
 }
 
@@ -43,7 +50,14 @@ export function mapApiResponseToProps(brandName: string, apiResponse: BrandStats
             resourceTypes: (apiResponse.aggregations.resourceTypes?.values ?? []).map(item => ({
                 ...item,
                 count: extrapolateAndRound(item.count)
-            }))
+            })),
+            sentiment: {
+                nsr: apiResponse.aggregations.sentiment.nsr,
+                values: apiResponse.aggregations.sentiment.values.map(item => ({
+                    ...item,
+                    count: extrapolateAndRound(item.count)
+                }))
+            }
         }
     };
 }
