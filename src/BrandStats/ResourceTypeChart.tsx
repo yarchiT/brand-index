@@ -12,8 +12,6 @@ interface ResourceTypeChartProps {
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d'];
 
 const ResourceTypeChart: React.FC<ResourceTypeChartProps> = ({ data }) => {
-    const totalCount = data.reduce((sum, item) => sum + item.count, 0);
-
     const chartData = data.map(item => ({
         name: item.key.charAt(0).toUpperCase() + item.key.slice(1),
         value: item.count
@@ -61,9 +59,6 @@ const ResourceTypeChart: React.FC<ResourceTypeChartProps> = ({ data }) => {
                     <Legend />
                 </PieChart>
             </ResponsiveContainer>
-            <p className="text-sm text-center mt-4">
-                Total mentions: {NumberUtils.formatNumber(totalCount)}
-            </p>
         </div>
     );
 };
