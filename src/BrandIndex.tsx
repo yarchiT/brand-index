@@ -54,18 +54,29 @@ const BrandIndex: React.FC = () => {
     };
 
     return (
-        <div className="w-full max-w-full px-4 py-16">
+        <div className="w-full max-w-full px-4 py-8 sm:py-16">
             <div className="w-full max-w-7xl mx-auto">
-                <div className="flex items-center mb-4">
-                    <div className="flex-grow flex justify-center space-x-16">
-                        <input
-                            type="text"
-                            value={mainBrand}
-                            onChange={(e) => setMainBrand(e.target.value)}
-                            onKeyPress={handleKeyPress}
-                            placeholder="Enter main brand name"
-                            className="w-full max-w-md px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
+                <div className="flex flex-col items-center justify-center mb-4 space-y-4">
+                    <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4">
+                        <div className="flex items-center space-x-2">
+                            <input
+                                type="text"
+                                value={mainBrand}
+                                onChange={(e) => setMainBrand(e.target.value)}
+                                onKeyPress={handleKeyPress}
+                                placeholder="Enter main brand name"
+                                className="w-full sm:w-auto max-w-md px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                            {mainBrandResponse && !showCompetitorInput && (
+                                <button
+                                    type="button"
+                                    onClick={addCompetitorInput}
+                                    className="px-2 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition duration-300"
+                                >
+                                    <Plus size={20} />
+                                </button>
+                            )}
+                        </div>
                         {showCompetitorInput && (
                             <input
                                 type="text"
@@ -73,29 +84,18 @@ const BrandIndex: React.FC = () => {
                                 onChange={(e) => setCompetitorBrand(e.target.value)}
                                 onKeyPress={handleKeyPress}
                                 placeholder="Enter competitor brand name"
-                                className="w-full max-w-md px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="w-full sm:w-auto max-w-md px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                             />
                         )}
                     </div>
-                    {mainBrandResponse && !showCompetitorInput && (
-                        <button
-                            type="button"
-                            onClick={addCompetitorInput}
-                            className="ml-4 px-2 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition duration-300"
-                        >
-                            <Plus size={20} />
-                        </button>
-                    )}
                     {mainBrandResponse && (
-                        <div className="flex justify-center mb-4">
-                            <button
-                                onClick={() => toPDF()}
-                                className="p-1 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition duration-300"
-                                title="Download PDF"
-                            >
-                                <Download size={16} />
-                            </button>
-                        </div>
+                        <button
+                            onClick={() => toPDF()}
+                            className="p-1 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition duration-300"
+                            title="Download PDF"
+                        >
+                            <Download size={16} />
+                        </button>
                     )}
                 </div>
                 <div ref={targetRef} className={`grid ${showCompetitorInput ? 'grid-cols-2' : 'grid-cols-1'} gap-16`}>
