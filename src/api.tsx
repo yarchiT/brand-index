@@ -27,6 +27,12 @@ export interface BrandStatsApiResponse {
                 count: number;
             }[];
         };
+        countries: {
+            values: {
+                key: string;
+                count: number;
+            }[];
+        }
     };
 }
 
@@ -57,7 +63,11 @@ export function mapApiResponseToProps(brandName: string, apiResponse: BrandStats
                     ...item,
                     count: extrapolateAndRound(item.count)
                 }))
-            }
+            },
+            countries: (apiResponse.aggregations.countries?.values ?? []).map(item => ({
+                ...item,
+                count: extrapolateAndRound(item.count)
+            }))
         }
     };
 }

@@ -3,6 +3,7 @@ import BrandDateChart from "./BrandDateChart.tsx";
 import {NumberUtils} from "../numberUtils.ts";
 import ResourceTypeChart from "./ResourceTypeChart.tsx";
 import SentimentChart from "./SentimentChart.tsx";
+import CountryDistributionChart from "./CountryDistributionChart.tsx";
 
 export interface BrandStatsProps {
     name: string;
@@ -14,6 +15,7 @@ export interface BrandStatsProps {
             nsr: number;
             values: { key: string; count: number; }[];
         };
+        countries: { key: string; count: number; }[];
     };
 }
 
@@ -40,6 +42,10 @@ const BrandStats: React.FC<BrandStatsProps> = ({ name, stats }) => {
                         positive: stats.sentiment.values.find(v => v.key === 'positive')?.count || 0,
                     }}
                 />
+            </div>
+
+            <div className="mb-8">
+                <CountryDistributionChart data={stats.countries} />
             </div>
             
         </div>
