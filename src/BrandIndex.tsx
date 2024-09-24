@@ -64,7 +64,7 @@ const BrandIndex: React.FC = () => {
                                 value={mainBrand}
                                 onChange={(e) => setMainBrand(e.target.value)}
                                 onKeyPress={handleKeyPress}
-                                placeholder="Enter main brand name"
+                                placeholder="Enter brand name"
                                 className="w-full sm:w-auto max-w-md px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                             />
                             {mainBrandResponse && !showCompetitorInput && (
