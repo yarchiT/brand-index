@@ -36,7 +36,7 @@ const SentimentChart: React.FC<SentimentChartProps> = ({ nsr, sentiment }) => {
     const color = getColor(nsr);
 
     const renderLegend = () => (
-        <div className="text-center mt-2">
+        <div className="text-center">
             <div className="grid grid-cols-3 gap-2 text-sm">
                 <div className="text-red-500">Negative: {NumberUtils.formatNumber(sentiment.negative)}</div>
                 <div className="text-yellow-500">Neutral: {NumberUtils.formatNumber(sentiment.neutral)}</div>
