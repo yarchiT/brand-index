@@ -45,17 +45,6 @@ const BrandStats: React.FC<BrandStatsProps> = ({ name, stats }) => {
             </div>
 
             <div className="mb-8">
-                <AuthorGenderStats data={stats.authorGender} />
-            </div>
-
-            <div className="mb-8">
-                <h3 className="text-xl font-semibold mb-6 text-center">Author Interests</h3>
-                <div className="w-full h-[300px]">
-                    <D3WordCloud data={stats.authorInterestCategories} />
-                </div>
-            </div>
-
-            <div className="mb-8">
                 <ResourceTypeChart data={stats.resourceTypes} />
             </div>
 
@@ -70,7 +59,18 @@ const BrandStats: React.FC<BrandStatsProps> = ({ name, stats }) => {
                 />
             </div>
 
-            <div className="mt-12 mb-8">
+            <div className="mb-8">
+                <AuthorGenderStats data={stats.authorGender} />
+            </div>
+
+            <div className="mb-8">
+                <h3 className="text-xl font-semibold mb-6 text-center">Author Interests</h3>
+                <div className="w-full h-[300px]">
+                    <D3WordCloud data={stats.authorInterestCategories} />
+                </div>
+            </div>
+
+            <div className="mb-8">
                 <CountryDistributionChart data={stats.countries} />
             </div>
 

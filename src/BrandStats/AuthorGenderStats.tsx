@@ -19,8 +19,8 @@ const AuthorGenderStats: React.FC<AuthorGenderStatsProps> = ({ data }) => {
     const communityCount = getGenderData('community');
 
     return (
-        <div className="w-full py-4">
-            <h3 className="text-xl font-semibold mb-6 text-center">Author Gender Distribution</h3>
+        <div className="w-full py-4 mb-4">
+            <h3 className="text-xl font-semibold mb-10 text-center">Author Gender Distribution</h3>
             <div className="flex justify-center items-start space-x-16">
                 <div className="flex flex-col items-center">
                     <User size={40} className="text-pink-500 mb-3" />
