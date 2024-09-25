@@ -6,6 +6,7 @@ import SentimentChart from "./SentimentChart.tsx";
 import CountryDistributionChart from "./CountryDistributionChart.tsx";
 import LanguageDistributionChart from "./LanguageDistributionChart.tsx";
 import AuthorGenderStats from "./AuthorGenderStats.tsx";
+import D3WordCloud from "../utils/CustomWordCloud.tsx";
 
 export interface BrandStatsProps {
     name: string;
@@ -20,6 +21,7 @@ export interface BrandStatsProps {
         countries: { key: string; count: number; }[];
         languages: { key: string; count: number; }[];
         authorGender: { key: string; count: number; }[];
+        authorInterestCategories: { key: string; count: number; }[];
     };
 }
 
@@ -35,6 +37,13 @@ const BrandStats: React.FC<BrandStatsProps> = ({ name, stats }) => {
 
             <div className="mb-8">
                 <AuthorGenderStats data={stats.authorGender} />
+            </div>
+
+            <div className="mb-8">
+                <h3 className="text-xl font-semibold text-center">Author Interests</h3>
+                <div className="w-full h-[300px]">
+                    <D3WordCloud data={stats.authorInterestCategories} />
+                </div>
             </div>
 
             <div className="mb-8">
@@ -59,6 +68,8 @@ const BrandStats: React.FC<BrandStatsProps> = ({ name, stats }) => {
             <div className="mt-16 mb-8">
                 <LanguageDistributionChart data={stats.languages} />
             </div>
+
+           
             
         </div>
     );
