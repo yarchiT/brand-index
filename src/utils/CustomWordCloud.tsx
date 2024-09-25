@@ -1,5 +1,6 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import cloud from 'd3-cloud';
+import { scaleOrdinal } from 'd3-scale';
 
 interface D3WordCloudProps {
     data: {
@@ -7,6 +8,37 @@ interface D3WordCloudProps {
         count: number;
     }[];
 }
+
+const allInterestCategories = [
+    "technology", "design", "arts", "movies", "music", "games", "other activities",
+    "books", "decorative arts", "home & garden", "information technology",
+    "food & drinks", "science", "sports", "shopping", "business", "security",
+    "engineering", "fashion", "family & parenting", "outdoor recreation",
+    "animals & pets", "media", "health & fitness", "automotive", "aviation",
+    "photo & video", "travel", "beauty", "sustainability", "transport",
+    "law & politics", "military", "relationship status", "nature", "celebrities", "dancing"
+];
+
+const extendedColorPalette = [
+    "#FF6B6B", "#4ECDC4", "#45B7D1", "#FFA07A", "#98D8C8",
+    "#F06292", "#AED581", "#7E57C2", "#FFD54F", "#4DB6AC",
+    "#FF7043", "#9575CD", "#4DD0E1", "#81C784", "#DCE775",
+    "#BA68C8", "#4FC3F7", "#FFF176", "#FFB74D", "#A1887F",
+    "#90CAF9", "#80CBC4", "#C5E1A5", "#9FA8DA", "#FFCC80",
+    "#BCAAA4", "#B39DDB", "#81D4FA", "#80DEEA", "#FFF59D"
+];
+
+const generateColor = (index: number) => {
+    const hue = (index * 137.508) % 360; // Use golden angle approximation
+    return `hsl(${hue}, 70%, 50%)`;
+};
+
+// Create a global color scale with extended palette
+const globalColorScale = scaleOrdinal<string, string>()
+    .domain(allInterestCategories)
+    .range(allInterestCategories.map((_, index) =>
+        index < extendedColorPalette.length ? extendedColorPalette[index] : generateColor(index)
+    ));
 
 const D3WordCloud: React.FC<D3WordCloudProps> = ({ data }) => {
     const [words, setWords] = useState<any[]>([]);
@@ -59,7 +91,7 @@ const D3WordCloud: React.FC<D3WordCloudProps> = ({ data }) => {
                         <text
                             key={i}
                             style={{
-                                fill: `hsl(${Math.random() * 360}, 70%, 50%)`,
+                                fill: globalColorScale(word.text),
                                 fontSize: word.size,
                                 fontFamily: 'Arial, sans-serif',
                             }}
