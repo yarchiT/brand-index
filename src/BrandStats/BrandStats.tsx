@@ -50,7 +50,7 @@ const BrandStats: React.FC<BrandStatsProps> = ({ name, stats }) => {
                 <ResourceTypeChart data={stats.resourceTypes} />
             </div>
 
-            <div className="mb-8">
+            <div className="mt-16 mb-8">
                 <SentimentChart
                     nsr={stats.sentiment.nsr}
                     sentiment={{
@@ -61,11 +61,11 @@ const BrandStats: React.FC<BrandStatsProps> = ({ name, stats }) => {
                 />
             </div>
 
-            <div className="mb-8">
+            <div className="mt-12 mb-8">
                 <CountryDistributionChart data={stats.countries} />
             </div>
 
-            <div className="mt-16 mb-8">
+            <div className="mt-20 mb-8">
                 <LanguageDistributionChart data={stats.languages} />
             </div>
 
