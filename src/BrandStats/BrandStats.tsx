@@ -28,7 +28,7 @@ export interface BrandStatsProps {
 const BrandStats: React.FC<BrandStatsProps> = ({ name, stats }) => {
     return (
         <div className="p-4">
-            <h1 className="text-2xl font-bold mb-4">{name}</h1>
+            <h1 className="text-4xl font-bold mb-4">{name}</h1>
             <p className="text-lg mb-4">Total Mentions: <span className="font-bold">{NumberUtils.formatNumber(stats.totalCount)}</span></p>
 
             <div className="mb-8">
