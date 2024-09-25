@@ -12,6 +12,8 @@ export interface BrandStatsProps {
     name: string;
     stats: {
         totalCount: number;
+        uniqueTextsCount: number;
+        imagesCount: number;
         dates: { date: string; count: number }[];
         resourceTypes: { key: string; count: number; }[];
         sentiment: {
@@ -29,9 +31,16 @@ const BrandStats: React.FC<BrandStatsProps> = ({ name, stats }) => {
     return (
         <div className="p-4">
             <h1 className="text-4xl font-bold mb-4">{name}</h1>
-            <p className="text-lg mb-4">Total Mentions: <span className="font-bold">{NumberUtils.formatNumber(stats.totalCount)}</span></p>
+            <div className="flex justify-center space-x-8 mt-8">
+                <p className="text-lg">
+                    Total Mentions: <span className="font-bold">{NumberUtils.formatNumber(stats.totalCount)}</span>
+                </p>
+                <p className="text-lg">
+                    Images: <span className="font-bold">{NumberUtils.formatNumber(stats.imagesCount)}</span>
+                </p>
+            </div>
 
-            <div className="mb-8">
+            <div className="mt-8 mb-8">
                 <BrandDateChart data={stats.dates} />
             </div>
 

@@ -51,6 +51,8 @@ export interface BrandStatsApiResponse {
                 count: number;
             }[];
         };
+        uniqueTextsCount: number,
+        imagesCount: number
     };
 }
 
@@ -67,6 +69,8 @@ export function mapApiResponseToProps(brandName: string, apiResponse: BrandStats
         name: brandName,
         stats: {
             totalCount: extrapolateAndRound(apiResponse.totalCount),
+            uniqueTextsCount: extrapolateAndRound(apiResponse.aggregations.uniqueTextsCount),
+            imagesCount: extrapolateAndRound(apiResponse.aggregations.imagesCount),
             dates: apiResponse.aggregations.dates.values.map(item => ({
                 date: item.dateAsUtc,
                 count: extrapolateAndRound(item.count)
