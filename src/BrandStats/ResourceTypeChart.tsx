@@ -84,7 +84,7 @@ const ResourceTypeChart: React.FC<ResourceTypeChartProps> = ({ data }) => {
 
     return (
         <div className="w-full lg:min-w-[500px] h-[350px]">
-            <h3 className="text-xl font-semibold mb-2 text-center">Source type</h3>
+            <h3 className="text-xl font-semibold text-center">Source type</h3>
             <ResponsiveContainer width="100%" height="90%">
                 <PieChart>
                     <Pie

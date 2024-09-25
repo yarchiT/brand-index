@@ -60,7 +60,7 @@ const SentimentChart: React.FC<SentimentChartProps> = ({ nsr, sentiment }) => {
 
     return (
         <div className="w-full lg:min-w-[300px] h-[230px]">
-            <h3 className="text-xl font-semibold mb-1 text-center cursor-help">Sentiment (NSR)</h3>
+            <h3 className="text-xl font-semibold mb-3 text-center cursor-help">Sentiment (NSR)</h3>
             <ResponsiveContainer width="100%" height="85%">
                 <PieChart>
                     <Pie

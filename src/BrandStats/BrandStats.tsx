@@ -40,7 +40,7 @@ const BrandStats: React.FC<BrandStatsProps> = ({ name, stats }) => {
             </div>
 
             <div className="mb-8">
-                <h3 className="text-xl font-semibold text-center">Author Interests</h3>
+                <h3 className="text-xl font-semibold mb-6 text-center">Author Interests</h3>
                 <div className="w-full h-[300px]">
                     <D3WordCloud data={stats.authorInterestCategories} />
                 </div>
